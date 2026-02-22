@@ -28,9 +28,31 @@ class SocketService {
 
     this.socket.on('connect_error', (err) => {
       console.error('[Socket] Connection error:', err.message);
+      console.error('[Socket] Server URL:', SERVER_URL);
     });
 
     return this.socket;
+  }
+
+  // Wait for connection to be established
+  async waitForConnection(timeout = 5000) {
+    if (this.socket?.connected) return this.socket;
+
+    return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        reject(new Error('Socket connection timeout'));
+      }, timeout);
+
+      this.socket?.once('connect', () => {
+        clearTimeout(timeoutId);
+        resolve(this.socket);
+      });
+
+      this.socket?.once('connect_error', (err) => {
+        clearTimeout(timeoutId);
+        reject(new Error(`Socket connection error: ${err.message}`));
+      });
+    });
   }
 
   disconnect() {

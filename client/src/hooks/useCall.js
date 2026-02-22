@@ -87,6 +87,9 @@ const useCall = () => {
 
     try {
       socketService.connect();
+      
+      // Wait for socket to be connected before proceeding
+      await socketService.waitForConnection(5000);
 
       // Join room on server
       const { routerRtpCapabilities, existingPeers } = await socketService.emit('joinRoom', {
