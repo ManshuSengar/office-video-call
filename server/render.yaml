@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: nexcall-server
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: ANNOUNCED_IP
+        sync: false          # Set this to your Render service's IP in dashboard
+      - key: CLIENT_URL
+        sync: false          # Set to your Vercel frontend URL
+      - key: RTC_MIN_PORT
+        value: 10000
+      - key: RTC_MAX_PORT
+        value: 10100
